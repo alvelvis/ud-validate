@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/validate', methods="POST".split())
 def validate():
-    conllu = request.values.get("inputText")
+    conllu = request.values.get("inputText").strip().replace("\r\n", "\n") + "\n\n"
     with open("sentence.conllu", "w") as f:
         f.write(conllu)
     try:
@@ -21,12 +21,13 @@ def validate():
     return render_template(
         'index.html',
         title="",
-        conllu=conllu,
+        conllu=conllu.strip(),
         validation=validation
         )
 
 @app.route('/')
 def home():
+    os.popen("git pull")
     update = os.popen("git pull --recurse-submodules 2>&1", "r").read()
     return render_template(
         'index.html', 
