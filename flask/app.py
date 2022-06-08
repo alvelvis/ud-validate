@@ -12,8 +12,7 @@ def validate():
     with open("sentence.conllu", "w") as f:
         f.write(conllu)
     try:
-        validation = os.popen("'{}/uvenv/bin/python3' '{}/tools/validate.py' --max-err=0 --lang=pt sentence.conllu 2>&1".format(
-        os.path.dirname(os.path.abspath(__file__)),
+        validation = os.popen("python3 '{}/tools/validate.py' --max-err=0 --lang=pt sentence.conllu 2>&1".format(
         os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
         ), "r").read()
     except Exception as e:
