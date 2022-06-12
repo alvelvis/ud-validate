@@ -26,6 +26,7 @@ else:
 
 @app.route('/', methods="POST GET".split())
 def home(conllu="", validation="", update=""):
+    on_heroku = "heroku" in request.url
     if request.method == "POST":
         # convert new-line to linux style and add empty line in the end (validation requirements)
         conllu = request.values.get("inputText").strip().replace("\r\n", "\n") + "\n\n"
@@ -49,7 +50,7 @@ def home(conllu="", validation="", update=""):
         conllu=conllu.strip(),
         validation=validation,
         update=update,
-        access_number=config['access_number']
+        access_number=config['access_number'] if not on_heroku else 0
         )
 
 @app.route("/validate", methods="POST GET".split())
