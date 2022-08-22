@@ -42,23 +42,26 @@
             </div>
 
             {% if validation %}
-            <a href="#" onclick="navigator.clipboard.writeText(validationOutput.innerHTML)">Copy to clipboard</a><br>
+            <a href="#" onclick="navigator.clipboard.writeText(validationOutput.innerHTML)">Copy output to clipboard</a><br>
             <pre id="validationOutput">{{validation}}</pre>
             {% endif %}
 
             <div class="form-label-group">
-                <textarea id="inputText" name="inputText" class="form-control" required autofocus>{{conllu}}</textarea>
+                Paste a sentence in the <a href="https://universaldependencies.org/format.html" target="_blank">CoNLL-U</a> format:
+                <textarea id="inputText" name="inputText" class="form-control inputText" required autofocus>{{conllu}}</textarea>
                 <label for="inputText"></label>
             </div>
 
             <button class="btn btn-lg btn-danger btn-block" type="submit">Validate</button>
+            Language: <input type="text" style="text-align: center; width: 45px;" maxlength="2" value="{% if lang %}{{ lang }}{% else %}pt{% endif %}" name="lang" id="lang">
             <p class="mt-5 mb-3 text-muted text-center">{% if access_number %}{{access_number}} sentences were tested<br>{% endif %}&copy; 2022</p>
         </form>
     </body>
     <div id="update" style="display:none">{{update}}</div>
     {% if update %}
     <script>
-        console.log(update.innerHTML)
+        console.log(update.textContent)
     </script>
     {% endif %}
+    <script src="{{ url_for('static', filename='flask-bootstrap.js') }}"></script>
 </html>

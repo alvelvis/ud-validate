@@ -25,16 +25,18 @@ else:
         config = json.load(f)
 
 @app.route('/', methods="POST GET".split())
-def home(conllu="", validation="", update=""):
+def home(conllu="", validation="", update="", lang=""):
     on_heroku = "heroku" in request.url
     if request.method == "POST":
         # convert new-line to linux style and add empty line in the end (validation requirements)
         conllu = request.values.get("inputText").strip().replace("\r\n", "\n") + "\n\n"
+        lang = request.values.get("lang").strip().lower()
         with open(sentence_path, "w") as f:
             f.write(conllu)
         try:
-            validation = os.popen("python3 '{}' --max-err=0 --lang=pt '{}' 2>&1".format(
+            validation = os.popen("python3 '{}' --max-err=0 --lang={} '{}' 2>&1".format(
                 validate_path,
+                lang,
                 sentence_path
             ), "r").read()
         except Exception as e:
@@ -50,6 +52,7 @@ def home(conllu="", validation="", update=""):
         conllu=conllu.strip(),
         validation=validation,
         update=update,
+        lang=lang,
         access_number=config['access_number'] if not on_heroku else 0
         )
 
