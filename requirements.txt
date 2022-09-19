@@ -1,3 +1,4 @@
 regex
 gunicorn
 flask
+deta

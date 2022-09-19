@@ -48,12 +48,14 @@
 
             <div class="form-label-group">
                 Paste a sentence in the <a href="https://universaldependencies.org/format.html" target="_blank">CoNLL-U</a> format:
-                <textarea id="inputText" name="inputText" class="form-control inputText" required autofocus>{{conllu}}</textarea>
+                <textarea id="inputText" name="inputText" class="form-control inputText" style="margin-top:5px" required autofocus>{{conllu}}</textarea>
                 <label for="inputText"></label>
             </div>
 
             <button class="btn btn-lg btn-danger btn-block" type="submit">Validate</button>
+            <div style="margin-top:10px">
             Language: <input type="text" style="text-align: center; width: 45px;" maxlength="2" value="{% if lang %}{{ lang }}{% else %}pt{% endif %}" name="lang" id="lang">
+            </div>
             <p class="mt-5 mb-3 text-muted text-center">{% if access_number %}{{access_number}} sentences were tested<br>{% endif %}&copy; 2022</p>
         </form>
     </body>
