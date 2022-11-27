@@ -51,8 +51,7 @@ def home(conllu="", validation="", update="", lang=""):
         os.remove(sentence_path)
         increase_access_number(conllu.count("\n\n"))    
     elif request.method == "GET":
-        os.popen("git pull")
-        update = os.popen("git pull --recurse-submodules 2>&1", "r").read()
+        update = os.popen("cd \"%s\"; git pull --recurse-submodules 2>&1" % app_path, "r").read()
     access_number = config.get("access_number")
     sentences_tested = config.get("sentences_tested")
 
