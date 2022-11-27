@@ -56,7 +56,7 @@
             <div style="margin-top:10px">
             Language: <input type="text" style="text-align: center; width: 45px;" maxlength="2" value="{% if lang %}{{ lang }}{% else %}pt{% endif %}" name="lang" id="lang">
             </div>
-            <p class="mt-5 mb-3 text-muted text-center">{% if access_number %}{{access_number}} sentences were tested<br>{% endif %}&copy; 2022</p>
+            <p class="mt-5 mb-3 text-muted text-center">{% if access_number %}{{access_number}} tests have been made ({{sentences_tested}} sentences tested)<br>{% endif %}&copy; 2022</p>
         </form>
     </body>
     <div id="update" style="display:none">{{update}}</div>
