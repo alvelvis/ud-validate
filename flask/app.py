@@ -5,7 +5,7 @@ import json
 app = Flask(__name__)
 app_path = os.path.dirname(os.path.abspath(__file__))
 config_path = os.path.join(app_path, "config.json")
-validate_path = os.path.join(app_path, "tools", "validate.py")
+validate_path = os.path.join(app_path, "..", "tools", "validate.py")
 sentence_path = os.path.join(app_path, "sentence.conllu")
 
 def save_config():
