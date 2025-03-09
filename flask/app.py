@@ -1,11 +1,13 @@
 from flask import Flask, redirect, render_template, request
 import os, sys, subprocess
 import json
+import requests
+import os
 
 app = Flask(__name__)
 app_path = os.path.dirname(os.path.abspath(__file__))
 config_path = os.path.join(app_path, "config.json")
-validate_path = os.path.join(app_path, "..", "tools", "validate.py")
+validate_path = os.path.join(app_path, "tools-master", "validate.py")
 sentence_path = os.path.join(app_path, "sentence.conllu")
 
 def save_config():
@@ -49,9 +51,28 @@ def home(conllu="", validation="", update="", lang=""):
         except Exception as e:
             validation = command + "\n" + str(e)
         os.remove(sentence_path)
-        increase_access_number(conllu.count("\n\n"))    
+        increase_access_number(conllu.count("\n\n"))
     elif request.method == "GET":
-        update = os.popen("cd \"%s\"; git pull --recurse-submodules 2>&1" % app_path, "r").read()
+        try:
+            # When GET request, try to update the validation script
+            response = requests.get("https://github.com/UniversalDependencies/tools/archive/master.zip")
+            if response.status_code == 200:
+                # Save the zip file
+                with open(os.path.join(app_path, "tools.zip"), "wb") as f:
+                    f.write(response.content)
+                
+                # Extract using subprocess
+                extract_command = f"unzip -o {os.path.join(app_path, 'tools.zip')} -d {app_path}"
+                subprocess.run(extract_command, shell=True)
+                
+                # Clean up
+                os.remove(os.path.join(app_path, "tools.zip"))
+            else:
+                raise Exception(f"Failed to download: Status code {response.status_code}")
+            
+            update = "The validation script has been successfully updated."
+        except Exception as e:
+            update = f"Error updating the validation script: {str(e)}"
     access_number = config.get("access_number")
     sentences_tested = config.get("sentences_tested")
 
