@@ -32,7 +32,7 @@ else:
         config = json.load(f)
 
 @app.route('/', methods="POST GET".split())
-def home(conllu="", validation="", update="", lang=""):
+def home(conllu="", validation="", lang=""):
     if request.method == "POST":
         # convert new-line to linux style and add empty line in the end (validation requirements)
         conllu = request.values.get("inputText").strip().replace("\r\n", "\n") + "\n\n"
