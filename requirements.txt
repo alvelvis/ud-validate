@@ -1,4 +1,4 @@
 regex
 gunicorn
 flask
-deta
+requests
