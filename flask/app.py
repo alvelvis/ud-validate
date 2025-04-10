@@ -3,6 +3,7 @@ import os, sys, subprocess
 import json
 import requests
 import os
+from datetime import date
 
 app = Flask(__name__)
 app_path = os.path.dirname(os.path.abspath(__file__))
@@ -71,6 +72,7 @@ def home(conllu="", validation="", update="", lang=""):
                 raise Exception(f"Failed to download: Status code {response.status_code}")
             
             update = "The validation script has been successfully updated."
+            globals()["ud_tools_version"] = date.today().strftime("%Y-%m-%d")
         except Exception as e:
             update = f"Error updating the validation script: {str(e)}"
     access_number = config.get("access_number")
@@ -84,8 +86,11 @@ def home(conllu="", validation="", update="", lang=""):
         update=update,
         lang=lang,
         access_number=access_number,
-        sentences_tested=sentences_tested
+        sentences_tested=sentences_tested,
+        ud_tools_version=globals()["ud_tools_version"]
         )
+
+ud_tools_version = "outdated"
 
 @app.route("/validate", methods="POST GET".split())
 def validate():
