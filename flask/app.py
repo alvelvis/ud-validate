@@ -53,28 +53,7 @@ def home(conllu="", validation="", update="", lang=""):
             validation = command + "\n" + str(e)
         os.remove(sentence_path)
         increase_access_number(conllu.count("\n\n"))
-    elif request.method == "GET":
-        try:
-            # When GET request, try to update the validation script
-            response = requests.get("https://github.com/UniversalDependencies/tools/archive/master.zip")
-            if response.status_code == 200:
-                # Save the zip file
-                with open(os.path.join(app_path, "tools.zip"), "wb") as f:
-                    f.write(response.content)
-                
-                # Extract using subprocess
-                extract_command = f"unzip -o {os.path.join(app_path, 'tools.zip')} -d {app_path}"
-                subprocess.run(extract_command, shell=True)
-                
-                # Clean up
-                os.remove(os.path.join(app_path, "tools.zip"))
-            else:
-                raise Exception(f"Failed to download: Status code {response.status_code}")
-            
-            update = "The validation script has been successfully updated."
-            globals()["ud_tools_version"] = date.today().strftime("%Y-%m-%d")
-        except Exception as e:
-            update = f"Error updating the validation script: {str(e)}"
+    
     access_number = config.get("access_number")
     sentences_tested = config.get("sentences_tested")
 
@@ -83,14 +62,35 @@ def home(conllu="", validation="", update="", lang=""):
         title="",
         conllu=conllu.strip(),
         validation=validation,
-        update=update,
         lang=lang,
         access_number=access_number,
         sentences_tested=sentences_tested,
         ud_tools_version=globals()["ud_tools_version"]
         )
 
+@app.route("/update", methods=["GET"])
+def update_tools():
+    # When GET request, try to update the validation script
+    response = requests.get("https://github.com/UniversalDependencies/tools/archive/master.zip")
+    if response.status_code == 200:
+        # Save the zip file
+        with open(os.path.join(app_path, "tools.zip"), "wb") as f:
+            f.write(response.content)
+        
+        # Extract using subprocess
+        extract_command = f"unzip -o {os.path.join(app_path, 'tools.zip')} -d {app_path}"
+        subprocess.run(extract_command, shell=True)
+        
+        # Clean up
+        os.remove(os.path.join(app_path, "tools.zip"))
+    else:
+        raise Exception(f"Failed to download: Status code {response.status_code}")
+    
+    globals()["ud_tools_version"] = date.today().strftime("%Y-%m-%d")
+    return redirect("/")
+
 ud_tools_version = "outdated"
+update_tools()
 
 @app.route("/validate", methods="POST GET".split())
 def validate():
