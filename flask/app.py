@@ -82,7 +82,10 @@ def update_tools():
         subprocess.run(extract_command, shell=True)
         
         # Clean up
-        os.remove(os.path.join(app_path, "tools.zip"))
+        try:
+            os.remove(os.path.join(app_path, "tools.zip"))
+        except FileNotFoundError:
+            pass
     else:
         raise Exception(f"Failed to download: Status code {response.status_code}")
     
