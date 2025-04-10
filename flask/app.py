@@ -53,6 +53,8 @@ def home(conllu="", validation="", lang=""):
             validation = command + "\n" + str(e)
         os.remove(sentence_path)
         increase_access_number(conllu.count("\n\n"))
+    else:
+        update_tools()
     
     access_number = config.get("access_number")
     sentences_tested = config.get("sentences_tested")
@@ -82,10 +84,7 @@ def update_tools():
         subprocess.run(extract_command, shell=True)
         
         # Clean up
-        try:
-            os.remove(os.path.join(app_path, "tools.zip"))
-        except FileNotFoundError:
-            pass
+        os.remove(os.path.join(app_path, "tools.zip"))
     else:
         raise Exception(f"Failed to download: Status code {response.status_code}")
     
@@ -93,7 +92,6 @@ def update_tools():
     return redirect("/")
 
 ud_tools_version = "outdated"
-update_tools()
 
 @app.route("/validate", methods="POST GET".split())
 def validate():
